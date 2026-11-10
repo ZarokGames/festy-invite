@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Invitation Festy</title>
+<meta name="description" content="Rejoins ta bande sur Festy : le programme du festival, ton groupe, et tu ne perds plus personne.">
+<meta property="og:title" content="Rejoins mon groupe sur Festy 🎉">
+<meta property="og:description" content="Le programme du festival, ta bande, et tu ne perds plus personne.">
+<meta property="og:image" content="https://zarokgames.github.io/festy-invite/icon.png">
+<meta name="theme-color" content="#0B0B12">
+<link rel="icon" href="icon.png">
+<style>
+  :root { --bg:#0B0B12; --card:#161622; --text:#F4F4F8; --mute:#9A9AB0; --accent:#FF3D7F; --live:#22E39A; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 440px; margin: 0 auto; padding: 28px 20px 40px; text-align: center; }
+  .logo { width: 150px; margin: 4px auto 22px; display:block; }
+  .card { background: var(--card); border-radius: 22px; padding: 26px 20px; }
+  .emoji { width: 84px; height: 84px; border-radius: 26px; background: rgba(255,61,127,.15); display:flex; align-items:center; justify-content:center; font-size: 44px; margin: 0 auto 14px; }
+  h1 { font-size: 24px; margin: 0 0 6px; line-height: 1.25; }
+  p { color: var(--mute); margin: 0 0 6px; line-height: 1.45; font-size: 15px; }
+  .code { display:inline-block; margin: 14px 0 4px; padding: 10px 16px; border-radius: 12px; background:#0F0F19; border:1px dashed #3a3a52; font: 700 22px/1 ui-monospace, Menlo, Consolas, monospace; letter-spacing: 2px; }
+  .btn { display:block; width:100%; margin-top: 12px; padding: 16px; border-radius: 999px; border: 0; font: 700 16px/1 inherit; text-decoration:none; cursor:pointer; }
+  .primary { background: var(--accent); color:#fff; }
+  .ghost { background: #232335; color: var(--text); }
+  .steps { text-align:left; margin: 22px 0 0; padding: 0; list-style: none; counter-reset: s; }
+  .steps li { counter-increment: s; position: relative; padding: 0 0 12px 38px; color: var(--mute); font-size: 15px; line-height: 1.4; }
+  .steps li::before { content: counter(s); position:absolute; left:0; top:-2px; width:26px; height:26px; border-radius:50%; background:#232335; color:var(--text); font-weight:700; display:flex; align-items:center; justify-content:center; font-size:13px; }
+  .stores { display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
+  .stores .btn { margin-top: 0; font-size: 15px; padding: 14px 10px; }
+  .ok { color: var(--live); font-size: 14px; min-height: 20px; margin-top: 8px; }
+  footer { margin-top: 26px; font-size: 12px; color: #5b5b72; }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+<main>
+  <img class="logo" src="festy-wordmark.png" alt="Festy">
+
+  <section class="card" id="invite">
+    <div class="emoji" id="emoji">🎉</div>
+    <h1 id="title">Tu es invité dans un groupe</h1>
+    <p id="sub">Le programme du festival, ta bande, et tu ne perds plus personne.</p>
+    <div class="code" id="code">—</div>
+    <p style="font-size:13px">Code d’invitation</p>
+
+    <a class="btn primary" id="open" href="#">J’ai Festy : ouvrir l’invitation</a>
+    <button class="btn ghost" id="copy" type="button">Copier le code</button>
+    <div class="ok" id="ok"></div>
+
+    <ol class="steps">
+      <li>Installe Festy (gratuit).</li>
+      <li>Crée ton profil : un pseudo suffit.</li>
+      <li>Reviens sur ce lien et touche « J’ai Festy », ou va dans <b>Potes → Ajouter un ami</b> et colle le code.</li>
+    </ol>
+    <div class="stores">
+      <a class="btn ghost" href="https://apps.apple.com/app/id6826527214">iPhone</a>
+      <a class="btn ghost" href="https://play.google.com/apps/testing/com.tuxed.festy">Android (bêta)</a>
+    </div>
+  </section>
+
+  <section class="card hidden" id="nocode">
+    <h1>Festy</h1>
+    <p>Le programme du festival, ta bande, et tu ne perds plus personne.</p>
+    <div class="stores" style="margin-top:16px">
+      <a class="btn ghost" href="https://apps.apple.com/app/id6826527214">iPhone</a>
+      <a class="btn ghost" href="https://play.google.com/apps/testing/com.tuxed.festy">Android (bêta)</a>
+    </div>
+  </section>
+
+  <footer>Festy est une app indépendante, non affiliée aux festivals.</footer>
+</main>
+<script>
+  // Lien : …/?g=G-AB12CD&n=Nom du groupe&e=🎉 (nom et emoji facultatifs, pour l'affichage seulement).
+  const q = new URLSearchParams(location.search);
+  const code = (q.get('g') || '').trim().toUpperCase();
+  const valid = /^[A-Z0-9-]{4,20}$/.test(code);
+  if (!valid) {
+    document.getElementById('invite').classList.add('hidden');
+    document.getElementById('nocode').classList.remove('hidden');
+  } else {
+    const name = (q.get('n') || '').slice(0, 60);
+    const emoji = Array.from(q.get('e') || '').slice(0, 2).join('');
+    if (emoji) document.getElementById('emoji').textContent = emoji;
+    if (name) document.getElementById('title').textContent = 'Rejoins « ' + name + ' » sur Festy';
+    document.getElementById('code').textContent = code;
+    document.getElementById('open').href = 'festy://groupe/' + encodeURIComponent(code);
+    document.getElementById('copy').addEventListener('click', async () => {
+      const ok = document.getElementById('ok');
+      try { await navigator.clipboard.writeText(code); ok.textContent = 'Code copié ✓'; }
+      catch { ok.textContent = 'Recopie le code à la main : ' + code; }
+    });
+  }
+</script>
+</body>
+</html>
